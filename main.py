@@ -4,11 +4,18 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-if len(sys.argv) == 1:
+if len(sys.argv) < 2:
     print("Question not provided in arguement 1.")
     sys.exit(1)
 
+if "--verbose" in sys.argv:
+    verbose = True
+else:
+    verbose = False
+
 user_prompt = sys.argv[1]
+
+
 
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -24,4 +31,7 @@ response = client.models.generate_content(
 )
 
 print(response.text)
-print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}\nResponse tokens: {response.usage_metadata.candidates_token_count}")
+if verbose:
+    print(f"User prompt: {user_prompt}")
+    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
