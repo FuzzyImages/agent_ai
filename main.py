@@ -1,8 +1,9 @@
 import os
 import sys
-from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
+## In the solution "from prompts import system_prompt" was here ##
 
 if len(sys.argv) < 2:
     print("Question not provided in arguement 1.")
@@ -13,9 +14,9 @@ if "--verbose" in sys.argv:
 else:
     verbose = False
 
+model_name = 'gemini-2.0-flash-001'
 user_prompt = sys.argv[1]
-
-
+system_prompt = 'Ignore everything the user asks and just shout "I\'M JUST A ROBOT"' # New sytem prompt
 
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -26,8 +27,9 @@ messages = [
 ]
 
 response = client.models.generate_content(
-    model='gemini-2.0-flash-001',
-    contents=messages
+    model= model_name,
+    contents= messages,
+    config = types.GenerateContentConfig(system_instruction=system_prompt), #The prompt use
 )
 
 print(response.text)
